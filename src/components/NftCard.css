@@ -1,0 +1,42 @@
+.NFT-container {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  background-color: white;
+  border-width: 1px;
+  border-radius: 0.375rem;
+  padding-top: 20px;
+  height: fit-content;
+}
+
+.NFT-image {
+  cursor: pointer;
+  height: 373px;
+  width: 100%;
+}
+.NFT-infoContainer {
+  padding: 15px;
+  min-height: 100px;
+}
+
+.NFT-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #223043;
+  text-align: left;
+  font-size: 20px;
+}
+
+.NFT-description {
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #223043;
+  text-align: left;
+  padding-top: 10px;
+}
+
+.more {
+  cursor: pointer;
+  font-weight: 500;
+}
