@@ -46,7 +46,7 @@ function App() {
   const [nfts, setNfts] = useState([] as Nft[]);
   const init = async () => {
     const domainOwner = await getOwner(Domain);
-    const nftList = await getNfts("0x0a2542a170aa02b96b588aa3af8b09ab22a9d7ac");
+    const nftList = await getNfts(domainOwner);
 
     setNfts(nftList);
   };
