@@ -29,14 +29,19 @@ const getNfts = async (ownerAddress: string): Promise<Array<Nft>> => {
   )
     .then((resp) => resp.json())
     .then(({ assets }) => {
-      return assets.map((asset: any) => {
-        return {
-          link: asset.permalink,
-          name: asset.name,
-          image_url: asset.image_url,
-          description: asset.description,
-        };
-      });
+      return assets
+        .map((asset: any) => {
+          if (!asset.name || !asset.image_url) {
+            return null;
+          }
+          return {
+            link: asset.permalink,
+            name: asset.name,
+            image_url: asset.image_url,
+            description: asset.description,
+          };
+        })
+        .filter((a: any) => a !== null);
     });
 };
 

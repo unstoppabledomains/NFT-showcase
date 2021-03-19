@@ -7,34 +7,59 @@ interface Props {
 }
 
 const NftCard = ({ nft }: Props) => {
-  const MaxDescriptionLength = 100;
+  const MaxTextLength = 100;
   const [openDescription, setOpenDescription] = useState(false);
+  const [openName, setOpenName] = useState(false);
+
   const handleClick = () => {
     window.open(nft.link, "_blank");
   };
 
-  const renderDescription = () => {
-    const handleClick = () => {
-      setOpenDescription(true);
+  const renderName = () => {
+    const handleMoreClick = () => {
+      setOpenName(true);
     };
-    if (openDescription) {
-      return nft.description;
+
+    if (openName) {
+      return nft.name;
     } else {
-      return (
+      return nft.name.length > MaxTextLength ? (
         <>
-          {nft.description?.length > MaxDescriptionLength
-            ? nft.description?.substring(0, MaxDescriptionLength) + "..."
-            : nft.description}
-          <span onClick={handleClick} className="more">
+          {nft.name.substring(0, MaxTextLength) + "..."}
+          <span onClick={handleMoreClick} className="more">
             more
           </span>
         </>
+      ) : (
+        nft.name
       );
     }
   };
+
+  const renderDescription = () => {
+    const handleMoreClick = () => {
+      setOpenDescription(true);
+    };
+
+    if (openDescription) {
+      return nft.description;
+    } else {
+      return nft.description.length > MaxTextLength ? (
+        <>
+          {nft.description.substring(0, MaxTextLength) + "..."}
+          <span onClick={handleMoreClick} className="more">
+            more
+          </span>
+        </>
+      ) : (
+        nft.description
+      );
+    }
+  };
+
   return (
     <div className="NFT-container">
-      <div>
+      <div className="NFT-image-container">
         <img
           src={nft.image_url}
           className="NFT-image"
@@ -43,7 +68,7 @@ const NftCard = ({ nft }: Props) => {
         />
       </div>
       <div className="NFT-infoContainer">
-        <div className="NFT-name">{nft.name}</div>
+        <div className="NFT-name">{renderName()}</div>
         {nft.description ? (
           <div className="NFT-description">{renderDescription()}</div>
         ) : null}
