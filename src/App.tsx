@@ -3,8 +3,6 @@ import "./App.css";
 import { Nft } from "./types";
 import NftCard from "./components/NftCard";
 
-const Domain = "ryan.crypto";
-
 const getOwner = async (domain: string) => {
   return fetch(
     "https://api.thegraph.com/subgraphs/name/unstoppable-domains-integrations/dot-crypto-registry",
@@ -45,7 +43,7 @@ const getNfts = async (ownerAddress: string): Promise<Array<Nft>> => {
 function App() {
   const [nfts, setNfts] = useState([] as Nft[]);
   const init = async () => {
-    const domainOwner = await getOwner(Domain);
+    const domainOwner = await getOwner((window as any).domain);
     const nftList = await getNfts(domainOwner);
 
     setNfts(nftList);
@@ -58,7 +56,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>{Domain}</h1>
+        <h1>{(window as any).domain}</h1>
         <div className="NFTs-container">
           {nfts.map((nft) => (
             <NftCard nft={nft} />

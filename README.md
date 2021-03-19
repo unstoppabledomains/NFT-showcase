@@ -10,4 +10,6 @@ To move app into website template:
 4. copy contents of template-build/index.html and move into nft-collection/nft-collection.ts
    - put into the string return statement
    - make sure there's no \n in the string or app won't render
+   - replace ryan.crypto with ${domain}
+   - replace title with ${domain}'s NFT Collection
 5. delete template-build/index.html
