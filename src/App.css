@@ -37,10 +37,57 @@
   }
 }
 
+.domain-name {
+  word-break: break-all;
+}
+
 .NFTs-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   width: 90%;
   justify-content: space-around;
   grid-gap: 20px;
+  margin-bottom: 2em;
+}
+
+.pagination {
+  display: inline-block;
+  margin-bottom: 2em;
+  max-width: 50%;
+}
+
+.pagination a {
+  cursor: pointer;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  margin: 0 4px;
+  text-decoration: none;
+  color: white;
+}
+
+.pagination a.active {
+  border-radius: 5px;
+  background-color: #4caf50;
+  color: white;
+}
+
+.loader {
+  border: 5px solid #555;
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
+  border-top: 5px solid #f3f3f3;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
