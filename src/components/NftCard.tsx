@@ -62,6 +62,7 @@ const NftCard = ({ nft }: Props) => {
       <div className="NFT-image-container">
         {nft.video_url ? (
           <video
+            onClick={handleClick}
             muted
             autoPlay
             controlsList="nodownload"
