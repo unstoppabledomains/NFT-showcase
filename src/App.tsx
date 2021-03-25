@@ -6,14 +6,13 @@ import { getNfts, getOwner } from "./helpers";
 import useAsyncEffect from "use-async-effect";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const PerPage = 6;
+const PerPage = 10;
 const OperaLimit = 50;
 
 function App() {
   const [openSeaPage, setOpenSeaPage] = useState(0);
   const [page, setPage] = useState(0);
   const [isMoreOperaPages, setIsMoreOperaPages] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [domainOwner, setDomainOwner] = useState("");
   const [pages, setPages] = useState([] as Array<Nft[]>);
   const [nfts, setNfts] = useState([] as Nft[]);
@@ -40,8 +39,7 @@ function App() {
     const _domainOwner = await getOwner((window as any).domain);
     const _pages = await getOpenSeaPages(_domainOwner, openSeaPage);
     setPages(_pages);
-    setNfts(_pages[0]);
-    setLoading(false);
+    setNfts(_pages.length ? _pages[0] : []);
     setDomainOwner(_domainOwner);
   }, []);
 
@@ -49,11 +47,9 @@ function App() {
     const newPage = page + 1;
     if (newPage >= pages.length && isMoreOperaPages) {
       const newOpenSeaPage = openSeaPage + 1;
-      setLoading(true);
       const _pages = await getOpenSeaPages(domainOwner, newOpenSeaPage);
       setPages([...pages, ..._pages]);
       setNfts([...nfts, ..._pages[0]]);
-      setLoading(false);
       setOpenSeaPage(newOpenSeaPage);
     } else if (pages[newPage]) {
       setNfts([...nfts, ...pages[newPage]]);
@@ -74,7 +70,7 @@ function App() {
               <div className="loader"></div>
             </div>
           }
-          scrollThreshold={1}
+          scrollThreshold={0.7}
         >
           {nfts.map((nft, index) => (
             <NftCard nft={nft} key={index} />

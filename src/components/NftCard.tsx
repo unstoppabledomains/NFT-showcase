@@ -63,6 +63,8 @@ const NftCard = ({ nft }: Props) => {
         {nft.video_url &&
         !nft.video_url.endsWith(".gif") &&
         !nft.video_url.endsWith(".mp4") &&
+        !nft.video_url.endsWith(".gltf") &&
+        !nft.video_url.endsWith(".glb") &&
         !nft.video_url.endsWith(".mp3") ? (
           <video
             onClick={handleClick}
