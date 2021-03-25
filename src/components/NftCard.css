@@ -23,7 +23,8 @@
 .NFT-image {
   cursor: pointer;
   object-fit: contain;
-  width: 100%;
+  width: initial;
+  max-width: 100%;
   height: 100%;
 }
 
@@ -52,4 +53,17 @@
 .more {
   cursor: pointer;
   font-weight: 500;
+}
+
+.infinite-scroll-component__outerdiv {
+  width: 90%;
+}
+
+.infinite-scroll-component {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  justify-content: space-around;
+  grid-gap: 20px;
+  margin-bottom: 2em;
+  overflow: hidden !important;
 }

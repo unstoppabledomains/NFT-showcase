@@ -60,10 +60,14 @@ const NftCard = ({ nft }: Props) => {
   return (
     <div className="NFT-container">
       <div className="NFT-image-container">
-        {nft.video_url ? (
+        {nft.video_url &&
+        !nft.video_url.endsWith(".gif") &&
+        !nft.video_url.endsWith(".mp4") &&
+        !nft.video_url.endsWith(".mp3") ? (
           <video
             onClick={handleClick}
             muted
+            playsInline
             autoPlay
             controlsList="nodownload"
             loop
@@ -82,11 +86,6 @@ const NftCard = ({ nft }: Props) => {
       </div>
       <div className="NFT-infoContainer">
         <div className="NFT-name">{renderName()}</div>
-        {nft.last_sale ? (
-          <div className="NFT-description">{nft.last_sale + " ETH"}</div>
-        ) : (
-          ""
-        )}
         {nft.description ? (
           <div className="NFT-description">{renderDescription()}</div>
         ) : null}

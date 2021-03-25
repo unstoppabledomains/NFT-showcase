@@ -4,17 +4,19 @@ import { Nft } from "./types";
 import NftCard from "./components/NftCard";
 import { getNfts, getOwner } from "./helpers";
 import useAsyncEffect from "use-async-effect";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-const PerPage = 10;
+const PerPage = 6;
 const OperaLimit = 50;
 
 function App() {
   const [openSeaPage, setOpenSeaPage] = useState(0);
   const [page, setPage] = useState(0);
-  const [isNextPage, setIsNextPage] = useState(false);
+  const [isMoreOperaPages, setIsMoreOperaPages] = useState(false);
   const [loading, setLoading] = useState(true);
   const [domainOwner, setDomainOwner] = useState("");
   const [pages, setPages] = useState([] as Array<Nft[]>);
+  const [nfts, setNfts] = useState([] as Nft[]);
 
   const getOpenSeaPages = async (_domainOwner: string, _page: number) => {
     const { nfts: _nfts, received } = await getNfts(
@@ -27,9 +29,9 @@ function App() {
       _pages.push(_nfts.slice(i * PerPage, (i + 1) * PerPage));
     }
     if (received >= OperaLimit) {
-      setIsNextPage(true);
+      setIsMoreOperaPages(true);
     } else {
-      setIsNextPage(false);
+      setIsMoreOperaPages(false);
     }
     return _pages;
   };
@@ -37,91 +39,47 @@ function App() {
   useAsyncEffect(async () => {
     const _domainOwner = await getOwner((window as any).domain);
     const _pages = await getOpenSeaPages(_domainOwner, openSeaPage);
-    setPages([...pages, ..._pages]);
+    setPages(_pages);
+    setNfts(_pages[0]);
     setLoading(false);
     setDomainOwner(_domainOwner);
   }, []);
 
-  const handlePrevPageClick = async () => {
-    const newPage = page - 1;
-
-    setPage(newPage);
-  };
-
   const handleNextPageClick = async () => {
     const newPage = page + 1;
-
-    if (newPage >= pages.length && isNextPage) {
+    if (newPage >= pages.length && isMoreOperaPages) {
       const newOpenSeaPage = openSeaPage + 1;
       setLoading(true);
       const _pages = await getOpenSeaPages(domainOwner, newOpenSeaPage);
       setPages([...pages, ..._pages]);
+      setNfts([...nfts, ..._pages[0]]);
       setLoading(false);
       setOpenSeaPage(newOpenSeaPage);
+    } else if (pages[newPage]) {
+      setNfts([...nfts, ...pages[newPage]]);
     }
     setPage(newPage);
-  };
-
-  const renderNextButton = () => {
-    if (page + 1 >= pages.length && !isNextPage) {
-      return null;
-    }
-    return (
-      <a href="/#" onClick={handleNextPageClick}>
-        &raquo;
-      </a>
-    );
-  };
-
-  const renderPagination = () => {
-    const pageList = [];
-    for (let i = 1; i <= pages.length; i++) {
-      pageList.push(i);
-    }
-    if (pageList.length === 1) {
-      return null;
-    }
-    return (
-      <div className="pagination">
-        {page > 0 ? (
-          <a href="/#" onClick={handlePrevPageClick}>
-            &laquo;
-          </a>
-        ) : null}
-        {pageList.map((p) => {
-          const handleClick = () => {
-            setPage(p - 1);
-          };
-          return (
-            <a
-              href="/#"
-              onClick={handleClick}
-              className={p - 1 === page ? "active" : ""}
-            >
-              {p}
-            </a>
-          );
-        })}
-        {renderNextButton()}
-      </div>
-    );
   };
 
   return (
     <div className="App">
       <header className="App-header">
         <h1 className="domain-name">{(window as any).domain}</h1>
-        {loading ? <div className="loader"></div> : null}
-        {!loading ? (
-          <>
-            <div className="NFTs-container">
-              {pages[page]
-                ? pages[page].map((nft) => <NftCard nft={nft} key={nft.name} />)
-                : null}
+        <InfiniteScroll
+          hasMore={page < pages.length || isMoreOperaPages}
+          next={handleNextPageClick}
+          dataLength={nfts.length}
+          loader={
+            <div className={"loader-container"}>
+              <div className="loader"></div>
             </div>
-            {renderPagination()}
-          </>
-        ) : null}
+          }
+          scrollThreshold={1}
+        >
+          {nfts.map((nft, index) => (
+            <NftCard nft={nft} key={index} />
+          ))}
+        </InfiniteScroll>
       </header>
     </div>
   );

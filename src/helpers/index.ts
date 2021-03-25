@@ -1,5 +1,4 @@
 import { Nft, OpenSeaAsset } from "../types";
-import BigNumber from "bignumber.js";
 const UnstoppableContract = "0xd1e5b0ff1287aa9f9a268759062e4ab08b9dacbe";
 const ENSContract = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85";
 
@@ -49,10 +48,6 @@ export const getNfts = async (
               image_url: c.image_url,
               description: c.description || "",
               video_url: c.animation_url || "",
-              last_sale:
-                c.last_sale && c.last_sale.total_price
-                  ? weiToEth(c.last_sale.total_price)
-                  : "",
             };
             a.push(nft);
           }
@@ -61,8 +56,4 @@ export const getNfts = async (
         received: assets.length,
       };
     });
-};
-
-const weiToEth = (wei: string) => {
-  return new BigNumber(wei, 10).div("1000000000000000000").toString(10);
 };
