@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./NftCard.css";
 import { Nft } from "../types";
+import VisibilitySensor from "react-visibility-sensor";
 
 interface Props {
   nft: Nft;
@@ -8,12 +9,25 @@ interface Props {
 
 const NftCard = ({ nft }: Props) => {
   const MaxTextLength = 100;
+  const videoRef = useRef(null);
   const [openDescription, setOpenDescription] = useState(false);
   const [openName, setOpenName] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const handleClick = () => {
     window.open(nft.link, "_blank");
   };
+  useEffect(() => {
+    if (isVisible) {
+      if (videoRef && videoRef.current) {
+        (videoRef.current as any).play();
+      }
+    } else {
+      if (videoRef && videoRef.current) {
+        (videoRef.current as any).pause();
+      }
+    }
+  }, [isVisible]);
 
   const renderName = () => {
     const handleMoreClick = () => {
@@ -65,17 +79,20 @@ const NftCard = ({ nft }: Props) => {
         !nft.video_url.endsWith(".gltf") &&
         !nft.video_url.endsWith(".glb") &&
         !nft.video_url.endsWith(".mp3") ? (
-          <video
-            onClick={handleClick}
-            muted
-            playsInline
-            autoPlay
-            controlsList="nodownload"
-            loop
-            preload="auto"
-            src={nft.video_url}
-            className="NFT-image"
-          />
+          <VisibilitySensor onChange={(isVisible) => setIsVisible(isVisible)}>
+            <video
+              onClick={handleClick}
+              muted
+              playsInline
+              autoPlay
+              controlsList="nodownload"
+              loop
+              preload="auto"
+              src={nft.video_url}
+              className="NFT-image"
+              ref={videoRef}
+            />
+          </VisibilitySensor>
         ) : (
           <img
             src={nft.image_url}
