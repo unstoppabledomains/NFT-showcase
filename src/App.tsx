@@ -16,6 +16,7 @@ function App() {
   const [domainOwner, setDomainOwner] = useState("");
   const [pages, setPages] = useState([] as Array<Nft[]>);
   const [nfts, setNfts] = useState([] as Nft[]);
+  const [loading, setLoading] = useState(true);
 
   const getOpenSeaPages = async (_domainOwner: string, _page: number) => {
     const { nfts: _nfts, received } = await getNfts(
@@ -41,6 +42,7 @@ function App() {
     setPages(_pages);
     setNfts(_pages.length ? _pages[0] : []);
     setDomainOwner(_domainOwner);
+    setLoading(false);
   }, []);
 
   const handleNextPageClick = async () => {
@@ -60,22 +62,32 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1 className="domain-name">{(window as any).domain}</h1>
-        <InfiniteScroll
-          hasMore={page < pages.length || isMoreOperaPages}
-          next={handleNextPageClick}
-          dataLength={nfts.length}
-          loader={
-            <div className={"loader-container"}>
-              <div className="loader"></div>
-            </div>
-          }
-          scrollThreshold={0.7}
-        >
-          {nfts.map((nft, index) => (
-            <NftCard nft={nft} key={index} />
-          ))}
-        </InfiniteScroll>
+        <p className="colorful-highlight">WEB3 NFT GALLERY</p>
+        <p className="domain-name">{(window as any).domain}</p>
+        {loading ? (
+          <div className={"loader-container"}>
+            <div className="loader"></div>
+          </div>
+        ) : (
+          <InfiniteScroll
+            hasMore={page < pages.length || isMoreOperaPages}
+            next={handleNextPageClick}
+            dataLength={nfts.length}
+            loader={
+              <div className={"loader-container"}>
+                <div className="loader"></div>
+              </div>
+            }
+            scrollThreshold={0.7}
+          >
+            {nfts.map((nft, index) => (
+              <NftCard nft={nft} key={index} />
+            ))}
+          </InfiniteScroll>
+        )}
+        {!nfts.length ? (
+          <div className="black">No NFTs to display :(</div>
+        ) : null}
       </header>
     </div>
   );

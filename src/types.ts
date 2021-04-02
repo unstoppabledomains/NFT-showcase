@@ -4,6 +4,10 @@ export interface Nft {
   image_url: string;
   description: string;
   video_url: string;
+  creator: {
+    username?: string;
+    profile_img?: string;
+  };
 }
 export interface OpenSeaAsset {
   token_id: string;
@@ -20,5 +24,12 @@ export interface OpenSeaAsset {
   };
   owner: {
     address: string;
+  };
+  creator: {
+    user?: {
+      username: string;
+    };
+    profile_img_url?: string;
+    address?: string;
   };
 }

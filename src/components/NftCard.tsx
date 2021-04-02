@@ -62,7 +62,6 @@ const NftCard = ({ nft }: Props) => {
       <div className="NFT-image-container">
         {nft.video_url &&
         !nft.video_url.endsWith(".gif") &&
-        !nft.video_url.endsWith(".mp4") &&
         !nft.video_url.endsWith(".gltf") &&
         !nft.video_url.endsWith(".glb") &&
         !nft.video_url.endsWith(".mp3") ? (
@@ -91,6 +90,20 @@ const NftCard = ({ nft }: Props) => {
         {nft.description ? (
           <div className="NFT-description">{renderDescription()}</div>
         ) : null}
+        <div className="divider" />
+        <div className="created-by">
+          {nft.creator.profile_img ? (
+            <img
+              src={nft.creator.profile_img}
+              alt="profile"
+              className="created-by-image"
+            />
+          ) : (
+            <div />
+          )}
+          <span className="created-by-text">Created by</span>
+          <span className="created-by-username">{nft.creator.username}</span>
+        </div>
       </div>
     </div>
   );

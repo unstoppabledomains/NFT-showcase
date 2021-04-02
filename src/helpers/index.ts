@@ -48,6 +48,11 @@ export const getNfts = async (
               image_url: c.image_url,
               description: c.description || "",
               video_url: c.animation_url || "",
+              creator: {
+                username:
+                  c.creator?.user?.username || c.creator?.address || "Unknown",
+                profile_img: c.creator?.profile_img_url || "",
+              },
             };
             a.push(nft);
           }
