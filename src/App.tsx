@@ -37,7 +37,8 @@ function App() {
   };
 
   useAsyncEffect(async () => {
-    const _domainOwner = await getOwner((window as any).domain);
+    // const _domainOwner = await getOwner((window as any).domain);
+    const _domainOwner = "0xa679c6154b8d4619af9f83f0bf9a13a680e01ecf";
     const _pages = await getOpenSeaPages(_domainOwner, openSeaPage);
     setPages(_pages);
     setNfts(_pages.length ? _pages[0] : []);
