@@ -37,8 +37,7 @@ function App() {
   };
 
   useAsyncEffect(async () => {
-    // const _domainOwner = await getOwner((window as any).domain);
-    const _domainOwner = "0xa679c6154b8d4619af9f83f0bf9a13a680e01ecf";
+    const _domainOwner = await getOwner((window as any).domain);
     const _pages = await getOpenSeaPages(_domainOwner, openSeaPage);
     setPages(_pages);
     setNfts(_pages.length ? _pages[0] : []);
@@ -63,7 +62,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p className="colorful-highlight">WEB3 NFT GALLERY</p>
+        <p className="colorful-highlight">NFT ART GALLERY</p>
         <p className="domain-name">{(window as any).domain}</p>
         {loading ? (
           <div className={"loader-container"}>
