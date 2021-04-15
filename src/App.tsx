@@ -86,7 +86,7 @@ function App() {
           </InfiniteScroll>
         )}
         {!loading && !nfts.length ? (
-          <div className="black">No NFTs to display :(</div>
+          <div className="black">No NFTs found in this wallet</div>
         ) : null}
       </header>
     </div>
