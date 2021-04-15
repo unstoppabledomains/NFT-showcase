@@ -98,36 +98,3 @@
   text-overflow: ellipsis;
   max-width: 50%;
 }
-
-.infinite-scroll-component__outerdiv {
-  max-width: 1063px;
-  width: 100%;
-}
-
-.infinite-scroll-component {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(11em, 1fr));
-  /* grid-template-columns: 200px repeat(auto-fill, 100px) 300px; */
-  grid-gap: 20px;
-  overflow: hidden !important;
-}
-@media only screen and (min-width: 1150px) {
-  .infinite-scroll-component {
-    margin: 0 -68px;
-    padding: 0px 48px;
-  }
-}
-
-@media only screen and (max-width: 1150px) {
-  .infinite-scroll-component {
-    margin: 0;
-    padding: 0 20px;
-  }
-}
-
-@media only screen and (max-width: 400px) {
-  .infinite-scroll-component {
-    margin: 0;
-    padding: 0;
-  }
-}
