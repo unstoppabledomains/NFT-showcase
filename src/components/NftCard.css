@@ -34,11 +34,14 @@
 }
 
 .NFT-infoContainer {
-  padding: 32px;
+  padding: 24px;
   min-height: 100px;
 }
 
 .NFT-name {
+  font-family: "Open Sans", sans-serif;
+  font-style: normal;
+  cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
   color: #223043;
@@ -50,28 +53,40 @@
   color: #000000;
 }
 
+.NFT-name:hover {
+  color: #0000ee;
+}
+
 .NFT-description {
+  font-family: "Open Sans", sans-serif;
+  font-style: normal;
   font-size: 15px;
   overflow: hidden;
   text-overflow: ellipsis;
   color: #6d6e76;
   text-align: left;
-  min-height: 63px;
-  margin: 8px 0px;
+  min-height: 43px;
+  margin-top: 8px;
 }
 
 .more {
+  font-family: "Open Sans", sans-serif;
+  font-style: normal;
   cursor: pointer;
-  font-weight: 500;
+  color: black;
+  font-weight: 600;
+  margin-left: 5px;
 }
 
 .divider {
   background: #e8e8e8;
-  margin: 20px 0;
+  margin: 24px 0;
   height: 1px;
 }
 
 .created-by {
+  font-family: "Open Sans", sans-serif;
+  font-style: normal;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -91,10 +106,17 @@
 }
 
 .created-by-username {
+  font-family: "Open Sans", sans-serif;
+  font-style: normal;
   margin-left: 5px;
   font-weight: bold;
   color: black;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 50%;
+  cursor: pointer;
+}
+
+.created-by-username:hover {
+  color: #0000ee;
 }

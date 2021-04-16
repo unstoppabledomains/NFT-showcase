@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./NftCard.css";
 import { Nft } from "../types";
 import VisibilitySensor from "react-visibility-sensor";
@@ -16,6 +16,12 @@ const NftCard = ({ nft }: Props) => {
 
   const handleClick = () => {
     window.open(nft.link, "_blank");
+  };
+  const handleUserNameClick = () => {
+    window.open(
+      `https://opensea.io/accounts/${nft.creator.username}`,
+      "_blank"
+    );
   };
   useEffect(() => {
     if (isVisible) {
@@ -103,10 +109,12 @@ const NftCard = ({ nft }: Props) => {
         )}
       </div>
       <div className="NFT-infoContainer">
-        <div className="NFT-name">{renderName()}</div>
-        {nft.description ? (
-          <div className="NFT-description">{renderDescription()}</div>
-        ) : null}
+        <div className="NFT-name" onClick={handleClick}>
+          {renderName()}
+        </div>
+        <div className="NFT-description">
+          {nft.description ? renderDescription() : null}
+        </div>
         <div className="divider" />
         <div className="created-by">
           {nft.creator.profile_img ? (
@@ -119,7 +127,9 @@ const NftCard = ({ nft }: Props) => {
             <div />
           )}
           <span className="created-by-text">Created by</span>
-          <span className="created-by-username">{nft.creator.username}</span>
+          <span className="created-by-username" onClick={handleUserNameClick}>
+            {nft.creator.username}
+          </span>
         </div>
       </div>
     </div>

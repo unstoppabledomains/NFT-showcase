@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #ebebeb;
+  background-color: #f9faff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -37,6 +37,8 @@
 }
 
 .domain-name {
+  font-family: "Open Sans", sans-serif;
+  font-style: normal;
   word-break: break-all;
   font-style: normal;
   font-weight: bold;
@@ -48,6 +50,8 @@
 }
 
 .colorful-highlight {
+  font-family: "Open Sans", sans-serif;
+  font-style: normal;
   background: linear-gradient(90deg, #9f1fed 0%, #645ff2 52.6%, #4ec4d6 100%);
   background-clip: text;
   -webkit-background-clip: text;
@@ -89,21 +93,24 @@
 }
 
 .infinite-scroll-component__outerdiv {
-  max-width: 1063px;
+  max-width: 1400px;
   width: 100%;
 }
 
 .infinite-scroll-component {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(11em, 1fr));
-  /* grid-template-columns: 200px repeat(auto-fill, 100px) 300px; */
-  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-gap: 32px;
   overflow: hidden !important;
+}
+@media only screen and (max-width: 400px) {
+  .infinite-scroll-component {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
 }
 
 @media only screen and (min-width: 1150px) {
   .infinite-scroll-component {
-    margin: 0 -68px;
     padding: 0px 48px;
   }
 }
