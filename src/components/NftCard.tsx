@@ -77,14 +77,27 @@ const NftCard = ({ nft }: Props) => {
     }
   };
 
-  return (
-    <div className="NFT-container">
-      <div className="NFT-image-container">
-        {nft.video_url &&
+  const shouldRenderVideo = () => {
+    if (nft.video_url) {
+      if (
         !nft.video_url.endsWith(".gif") &&
         !nft.video_url.endsWith(".gltf") &&
         !nft.video_url.endsWith(".glb") &&
-        !nft.video_url.endsWith(".mp3") ? (
+        !nft.video_url.endsWith(".mp3")
+      ) {
+        return true;
+      }
+    }
+    // For case when image_url incorrectly provides video file
+    if (nft.image_url && nft.image_url.endsWith(".mp4")) {
+      return true;
+    }
+    return false;
+  };
+  return (
+    <div className="NFT-container">
+      <div className="NFT-image-container">
+        {shouldRenderVideo() ? (
           <VisibilitySensor onChange={(isVis) => setIsVisible(isVis)}>
             <video
               onClick={handleClick}
@@ -94,7 +107,7 @@ const NftCard = ({ nft }: Props) => {
               controlsList="nodownload"
               loop
               preload="auto"
-              src={nft.video_url}
+              src={nft.video_url || nft.image_url}
               className="NFT-image"
               ref={videoRef}
             />

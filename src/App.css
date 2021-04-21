@@ -102,7 +102,9 @@
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   grid-gap: 32px;
   overflow: hidden !important;
+  padding-bottom: 100px;
 }
+
 @media only screen and (max-width: 400px) {
   .infinite-scroll-component {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -111,20 +113,55 @@
 
 @media only screen and (min-width: 1150px) {
   .infinite-scroll-component {
-    padding: 0px 48px;
+    padding-left: 48px;
+    padding-right: 48px;
   }
 }
 
 @media only screen and (max-width: 1150px) {
   .infinite-scroll-component {
     margin: 0;
-    padding: 0 20px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
 
 @media only screen and (max-width: 400px) {
   .infinite-scroll-component {
     margin: 0;
-    padding: 0;
+    padding-left: 0;
+    padding-right: 0;
   }
+}
+
+.margin-bottom {
+  margin-bottom: 100px;
+}
+
+.powered-by-container {
+  margin-bottom: 100px;
+  display: flex;
+  align-items: center;
+}
+
+.unstoppable-logo {
+  margin-right: 12px;
+}
+
+.powered-by-margin-top {
+  margin-top: 100px;
+}
+
+.powered-by-text {
+  font-family: "Open Sans", sans-serif;
+  font-style: normal;
+  word-break: break-all;
+  font-weight: 600;
+  font-size: 16px;
+  color: #a2a2a2;
+}
+
+.blue-link-highlight {
+  color: #4c47f7;
+  cursor: pointer;
 }

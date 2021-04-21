@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import { Nft } from "./types";
 import NftCard from "./components/NftCard";
 import { getNfts, getOwner } from "./helpers";
 import useAsyncEffect from "use-async-effect";
 import InfiniteScroll from "react-infinite-scroll-component";
+import UnstoppableLogo from "./UnstoppableLogo.svg";
 
 const PerPage = 10;
 const OperaLimit = 50;
@@ -17,6 +18,10 @@ function App() {
   const [pages, setPages] = useState([] as Array<Nft[]>);
   const [nfts, setNfts] = useState([] as Nft[]);
   const [loading, setLoading] = useState(true);
+
+  const handleUDClick = () => {
+    window.open("https://unstoppabledomains.com", "_blank");
+  };
 
   const getOpenSeaPages = async (_domainOwner: string, _page: number) => {
     const { nfts: _nfts, received } = await getNfts(
@@ -65,7 +70,7 @@ function App() {
         <p className="colorful-highlight">NFT ART GALLERY</p>
         <p className="domain-name">{(window as any).domain}</p>
         {loading ? (
-          <div className={"loader-container"}>
+          <div className={"loader-container margin-bottom"}>
             <div className="loader"></div>
           </div>
         ) : (
@@ -86,8 +91,19 @@ function App() {
           </InfiniteScroll>
         )}
         {!loading && !nfts.length ? (
-          <div className="black">No NFTs found in this wallet</div>
+          <div className="black margin-bottom">
+            No NFTs found in this wallet
+          </div>
         ) : null}
+        <div className={`powered-by-container`}>
+          <img src={UnstoppableLogo} alt={""} className={"unstoppable-logo"} />
+          <div className={"powered-by-text"}>
+            Powered by{" "}
+            <span className={"blue-link-highlight"} onClick={handleUDClick}>
+              Unstoppable Domains
+            </span>
+          </div>
+        </div>
       </header>
     </div>
   );
