@@ -4,19 +4,13 @@ const UNSRegistry = "0x049aba7510f45ba5b64ea9e658e342f904db358d";
 const ENSContract = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85";
 
 export const getOwner = async (domain: string) => {
-  return fetch(
-    "https://api.thegraph.com/subgraphs/name/unstoppable-domains-integrations/dot-crypto-registry",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: `{domains(first: 1, where: {name: "${domain}"}) {  id  name  owner {    id  } } }`,
-      }),
-    }
-  )
+  return fetch(`https://unstoppabledomains.com/api/v1/${domain}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
     .then((resp) => resp.json())
-    .then(({ data }) => {
-      return data.domains[0].owner.id;
+    .then((data) => {
+      return data?.meta?.owner;
     });
 };
 
