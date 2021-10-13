@@ -13,16 +13,32 @@ const NftCard = ({ nft }: Props) => {
   const [openDescription, setOpenDescription] = useState(false);
   const [openName, setOpenName] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [showVideo, setShowVideo] = useState(true);
 
   const handleClick = () => {
     window.open(nft.link, "_blank");
   };
+
   const handleUserNameClick = () => {
     window.open(
       `https://opensea.io/accounts/${nft.creator.username}`,
       "_blank"
     );
   };
+
+  useEffect(() => {
+    const element = document.getElementById(nft.name);
+    if (element) {
+      element.addEventListener(
+        "error",
+        (e) => {
+          setShowVideo(false);
+        },
+        true
+      );
+    }
+  }, [nft]);
+
   useEffect(() => {
     if (isVisible) {
       if (videoRef && videoRef.current) {
@@ -78,6 +94,9 @@ const NftCard = ({ nft }: Props) => {
   };
 
   const shouldRenderVideo = () => {
+    if (!showVideo) {
+      return false;
+    }
     if (nft.video_url) {
       if (
         !nft.video_url.endsWith(".gif") &&
@@ -100,6 +119,7 @@ const NftCard = ({ nft }: Props) => {
         {shouldRenderVideo() ? (
           <VisibilitySensor onChange={(isVis) => setIsVisible(isVis)}>
             <video
+              id={nft.name}
               onClick={handleClick}
               muted
               playsInline
