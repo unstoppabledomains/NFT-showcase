@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import "./NftCard.css";
-import { Nft } from "../types";
+import { SerializedNftMetadata } from "../types";
 import VisibilitySensor from "react-visibility-sensor";
 
 interface Props {
-  nft: Nft;
+  nft: SerializedNftMetadata;
 }
 
 const NftCard = ({ nft }: Props) => {
@@ -97,18 +97,18 @@ const NftCard = ({ nft }: Props) => {
     if (!showVideo) {
       return false;
     }
-    if (nft.video_url) {
+    if (nft.animationUrl) {
       if (
-        !nft.video_url.endsWith(".gif") &&
-        !nft.video_url.endsWith(".gltf") &&
-        !nft.video_url.endsWith(".glb") &&
-        !nft.video_url.endsWith(".mp3")
+        !nft.animationUrl.endsWith(".gif") &&
+        !nft.animationUrl.endsWith(".gltf") &&
+        !nft.animationUrl.endsWith(".glb") &&
+        !nft.animationUrl.endsWith(".mp3")
       ) {
         return true;
       }
     }
     // For case when image_url incorrectly provides video file
-    if (nft.image_url && nft.image_url.endsWith(".mp4")) {
+    if (nft.image && nft.image.endsWith(".mp4")) {
       return true;
     }
     return false;
@@ -127,14 +127,14 @@ const NftCard = ({ nft }: Props) => {
               controlsList="nodownload"
               loop
               preload="auto"
-              src={nft.video_url || nft.image_url}
+              src={nft.animationUrl || nft.image}
               className="NFT-image"
               ref={videoRef}
             />
           </VisibilitySensor>
         ) : (
           <img
-            src={nft.image_url}
+            src={nft.image}
             className="NFT-image"
             onClick={handleClick}
             alt={nft.name}

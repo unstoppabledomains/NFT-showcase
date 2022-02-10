@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./App.css";
-import { Nft } from "./types";
+import { SerializedNftMetadata } from "./types";
 import NftCard from "./components/NftCard";
-import { getNfts, getOwner } from "./helpers";
+import { getArtNfts, getOwner } from "./helpers";
 import useAsyncEffect from "use-async-effect";
 import InfiniteScroll from "react-infinite-scroll-component";
 import UnstoppableLogo from "./UnstoppableLogo.svg";
@@ -15,8 +15,8 @@ function App() {
   const [page, setPage] = useState(0);
   const [isMoreOperaPages, setIsMoreOperaPages] = useState(false);
   const [domainOwner, setDomainOwner] = useState("");
-  const [pages, setPages] = useState([] as Array<Nft[]>);
-  const [nfts, setNfts] = useState([] as Nft[]);
+  const [pages, setPages] = useState<Array<SerializedNftMetadata[]>>([]);
+  const [nfts, setNfts] = useState<SerializedNftMetadata[]>([]);
   const [loading, setLoading] = useState(true);
 
   const handleUDClick = () => {
@@ -24,12 +24,12 @@ function App() {
   };
 
   const getOpenSeaPages = async (_domainOwner: string, _page: number) => {
-    const { nfts: _nfts, received } = await getNfts(
-      _domainOwner,
-      _page,
-      OperaLimit
-    );
-    const _pages: Array<Nft[]> = [];
+    const _nfts = await getArtNfts({
+      ownerAddress: _domainOwner,
+      offset: _page,
+      limit: OperaLimit
+    });
+    const _pages: Array<SerializedNftMetadata[]> = [];
     for (let i = 0; i * PerPage < _nfts.length; i += 1) {
       _pages.push(_nfts.slice(i * PerPage, (i + 1) * PerPage));
     }

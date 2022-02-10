@@ -1,7 +1,4 @@
-import { Nft, OpenSeaAsset } from "../types";
-const CNSRegistry = "0xd1e5b0ff1287aa9f9a268759062e4ab08b9dacbe";
-const UNSRegistry = "0x049aba7510f45ba5b64ea9e658e342f904db358d";
-const ENSContract = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85";
+import { SerializedNftMetadata, NftCategory } from "../types";
 
 export const getOwner = async (domain: string) => {
   return fetch(`https://unstoppabledomains.com/api/v1/${domain}`, {
@@ -14,47 +11,20 @@ export const getOwner = async (domain: string) => {
     });
 };
 
-export const getNfts = async (
+export const getArtNfts = async ({
+  ownerAddress,
+  offset,
+  limit,
+}:{
   ownerAddress: string,
   offset: number,
   limit: number
-): Promise<{ nfts: Array<Nft>; received: number }> => {
-  return fetch(
-    `https://api.opensea.io/api/v1/assets?order_direction=desc&offset=${
+}): Promise<Array<SerializedNftMetadata>> => {
+  const resp = await fetch(
+    `https://unstoppabledomains.com/api//nfts/eth?offset=${
       offset * limit
-    }&limit=${limit}&owner=${ownerAddress}`,
-    {
-      method: "GET",
-    }
+    }&limit=${limit}&owner=${ownerAddress}`
   )
-    .then((resp) => resp.json())
-    .then(({ assets }: { assets: OpenSeaAsset[] }) => {
-      return {
-        nfts: assets.reduce((a, c: OpenSeaAsset) => {
-          if (
-            (c.name || c.token_id) &&
-            c.image_url &&
-            c.asset_contract.address.toLowerCase() !== CNSRegistry &&
-            c.asset_contract.address.toLowerCase() !== UNSRegistry &&
-            c.asset_contract.address.toLowerCase() !== ENSContract
-          ) {
-            const nft: Nft = {
-              link: c.permalink,
-              name: c.name || c.token_id,
-              image_url: c.image_url,
-              description: c.description || "",
-              video_url: c.animation_url || "",
-              creator: {
-                username:
-                  c.creator?.user?.username || c.creator?.address || "Unknown",
-                profile_img: c.creator?.profile_img_url || "",
-              },
-            };
-            a.push(nft);
-          }
-          return a;
-        }, [] as Array<Nft>),
-        received: assets.length,
-      };
-    });
+  const {nfts}: {nfts: SerializedNftMetadata[]} = await resp.json();
+  return nfts.filter((nft) => nft.category === NftCategory.Art);
 };

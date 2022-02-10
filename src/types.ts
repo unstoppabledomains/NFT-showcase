@@ -1,35 +1,24 @@
-export interface Nft {
-  link: string;
-  name: string;
-  image_url: string;
-  description: string;
-  video_url: string;
-  creator: {
-    username?: string;
-    profile_img?: string;
-  };
+enum Network {
+  Mainnet = '1',
+  Goerli = '5',
+  Polygon = '137',
+  Mumbai = '80001',
 }
-export interface OpenSeaAsset {
-  token_id: string;
-  image_url: string;
-  background_color: string;
-  name?: string;
-  external_link: string;
-  permalink: string;
-  description?: string;
-  animation_url?: string;
-  asset_contract: {
-    address: string;
-    name: string;
-  };
-  owner: {
-    address: string;
-  };
-  creator: {
-    user?: {
-      username: string;
-    };
-    profile_img_url?: string;
-    address?: string;
-  };
+
+export enum NftCategory {
+  Art = 'art',
+  Other = 'other',
 }
+
+export type SerializedNftMetadata = {
+  image: string | null;
+  name: string | null;
+  description: string | null;
+  animationUrl: string | null;
+  tokenAddress: string;
+  tokenId: string;
+  ownerOf: string;
+  contractType: string;
+  chainId: Network;
+  category: NftCategory;
+};
