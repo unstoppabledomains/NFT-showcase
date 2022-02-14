@@ -19,13 +19,6 @@ const NftCard = ({ nft }: Props) => {
     window.open(nft.link, "_blank");
   };
 
-  const handleUserNameClick = () => {
-    window.open(
-      `https://opensea.io/accounts/${nft.creator.username}`,
-      "_blank"
-    );
-  };
-
   useEffect(() => {
     const element = document.getElementById(nft.name);
     if (element) {
@@ -147,22 +140,6 @@ const NftCard = ({ nft }: Props) => {
         </div>
         <div className="NFT-description">
           {nft.description ? renderDescription() : null}
-        </div>
-        <div className="divider" />
-        <div className="created-by">
-          {nft.creator.profile_img ? (
-            <img
-              src={nft.creator.profile_img}
-              alt="profile"
-              className="created-by-image"
-            />
-          ) : (
-            <div />
-          )}
-          <span className="created-by-text">Created by</span>
-          <span className="created-by-username" onClick={handleUserNameClick}>
-            {nft.creator.username}
-          </span>
         </div>
       </div>
     </div>

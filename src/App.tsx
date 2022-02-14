@@ -2,18 +2,18 @@ import { useState } from "react";
 import "./App.css";
 import { Nft } from "./types";
 import NftCard from "./components/NftCard";
-import { getNfts, getOwner } from "./helpers";
+import { getEthNfts, getOwner } from "./helpers";
 import useAsyncEffect from "use-async-effect";
 import InfiniteScroll from "react-infinite-scroll-component";
 import UnstoppableLogo from "./UnstoppableLogo.svg";
 
 const PerPage = 10;
-const OperaLimit = 50;
+const PageLimit = 50;
 
 function App() {
-  const [openSeaPage, setOpenSeaPage] = useState(0);
+  const [udPage, setUdPage] = useState(0);
   const [page, setPage] = useState(0);
-  const [isMoreOperaPages, setIsMoreOperaPages] = useState(false);
+  const [isMoreOperaPages, setIsMorePages] = useState(false);
   const [domainOwner, setDomainOwner] = useState("");
   const [pages, setPages] = useState([] as Array<Nft[]>);
   const [nfts, setNfts] = useState([] as Nft[]);
@@ -23,27 +23,27 @@ function App() {
     window.open("https://unstoppabledomains.com", "_blank");
   };
 
-  const getOpenSeaPages = async (_domainOwner: string, _page: number) => {
-    const { nfts: _nfts, received } = await getNfts(
+  const getNftPages = async (_domainOwner: string, _page: number) => {
+    const { nfts: _nfts, received } = await getEthNfts(
       _domainOwner,
       _page,
-      OperaLimit
+      PageLimit
     );
     const _pages: Array<Nft[]> = [];
     for (let i = 0; i * PerPage < _nfts.length; i += 1) {
       _pages.push(_nfts.slice(i * PerPage, (i + 1) * PerPage));
     }
-    if (received >= OperaLimit) {
-      setIsMoreOperaPages(true);
+    if (received >= PageLimit) {
+      setIsMorePages(true);
     } else {
-      setIsMoreOperaPages(false);
+      setIsMorePages(false);
     }
     return _pages;
   };
 
   useAsyncEffect(async () => {
     const _domainOwner = await getOwner((window as any).domain);
-    const _pages = await getOpenSeaPages(_domainOwner, openSeaPage);
+    const _pages = await getNftPages(_domainOwner, udPage);
     setPages(_pages);
     setNfts(_pages.length ? _pages[0] : []);
     setDomainOwner(_domainOwner);
@@ -53,11 +53,11 @@ function App() {
   const handleNextPageClick = async () => {
     const newPage = page + 1;
     if (newPage >= pages.length && isMoreOperaPages) {
-      const newOpenSeaPage = openSeaPage + 1;
-      const _pages = await getOpenSeaPages(domainOwner, newOpenSeaPage);
+      const newudPage = udPage + 1;
+      const _pages = await getNftPages(domainOwner, newudPage);
       setPages([...pages, ..._pages]);
       setNfts([...nfts, ..._pages[0]]);
-      setOpenSeaPage(newOpenSeaPage);
+      setUdPage(newudPage);
     } else if (pages[newPage]) {
       setNfts([...nfts, ...pages[newPage]]);
     }
