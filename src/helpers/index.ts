@@ -11,11 +11,19 @@ export const getOwner = async (domain: string) => {
     });
 };
 
+const formOpenSeaLink = (nft: UdNft) => {
+  let chainPrefix = "";
+  if (nft.chainId === "137") {
+    chainPrefix = "matic/";
+  }
+  return `https://opensea.io/assets/${chainPrefix}${nft.tokenAddress}/${nft.tokenId}`;
+};
+
 const cleanNfts = (nfts: UdNft[]): Nft[] => {
   return nfts
     .filter((nft) => nft.category === "art")
     .map((nft) => ({
-      link: `https://opensea.io/assets/${nft.tokenAddress}/${nft.tokenId}`,
+      link: formOpenSeaLink(nft),
       name: nft.name || nft.tokenId,
       image_url: nft.imageUrl,
       description: nft.description || "",

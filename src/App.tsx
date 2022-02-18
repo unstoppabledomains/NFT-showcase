@@ -6,19 +6,16 @@ import { getNfts, getOwner } from "./helpers";
 import useAsyncEffect from "use-async-effect";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const PerPage = 10;
 const PageLimit = 50;
 
 function App() {
-  const [pages, setPages] = useState([] as Array<Nft[]>);
-  const [currentPage, setCurrentPage] = useState(0);
   const [ethPage, setEthPage] = useState(0);
   const [l2Page, setL2Page] = useState(0);
-  const [isMoreEthPages, setIsMoreEthPages] = useState(true);
-  const [isMorePages, setIsMorePages] = useState(false);
   const [domainOwner, setDomainOwner] = useState("");
   const [nfts, setNfts] = useState([] as Nft[]);
   const [loading, setLoading] = useState(true);
+  const [isAllEthNftsLoaded, setIsAllEthNftsLoaded] = useState(false); // No need to trigger a request when true
+  const [isAllL2NftsLoaded, setIsAllL2NftsLoaded] = useState(false); // No need to trigger a request when true
 
   // useEffect(() => {
   //   const $style = document.createElement("style");
@@ -30,65 +27,52 @@ function App() {
     window.open("https://unstoppabledomains.com", "_blank");
   };
 
-  const sliceIntoPages = (nftArray: Nft[]) => {
-    const _pages: Array<Nft[]> = [];
-    for (let i = 0; i * PerPage < nftArray.length; i += 1) {
-      _pages.push(nftArray.slice(i * PerPage, (i + 1) * PerPage));
-    }
-    return _pages;
-  };
-
-  const getEthNftPages = async (ownerAddress: string, _page: number) => {
-    const { nfts: _nfts, received } = await getNfts(
-      `https://unstoppabledomains.com/api/nfts/eth?offset=${
-        _page * PageLimit
-      }&limit=${PageLimit}&ownerAddress=${ownerAddress}`
-    );
-    setIsMorePages(true);
-    if (received < PageLimit) {
-      setIsMoreEthPages(false);
-    }
-    return sliceIntoPages(_nfts);
-  };
-
-  const getL2NftPages = async (ownerAddress: string, _page: number) => {
-    const { nfts: _nfts, received } = await getNfts(
-      `https://unstoppabledomains.com/api/nfts/l2?offset=${
-        _page * PageLimit
-      }&limit=${PageLimit}&ownerAddress=${ownerAddress}&chain=polygon`
-    );
-    if (received >= PageLimit) {
-      setIsMorePages(true);
-    } else {
-      setIsMorePages(false);
-    }
-    return sliceIntoPages(_nfts);
-  };
-
   useAsyncEffect(async () => {
     const _domainOwner = await getOwner((window as any).domain);
-    const _pages = await getEthNftPages(_domainOwner, ethPage);
-    setPages(_pages);
-    setNfts(_pages.length ? _pages[0] : []);
     setDomainOwner(_domainOwner);
-    setLoading(false);
   }, []);
-
-  const handleNextPageClick = async () => {
-    const newPage = currentPage + 1;
-    if (newPage >= pages.length && isMorePages) {
-      const _pages = isMoreEthPages
-        ? await getEthNftPages(domainOwner, ethPage + 1)
-        : await getL2NftPages(domainOwner, l2Page + 1);
-      setPages([...pages, ..._pages]);
-      if (_pages.length) {
-        setNfts([...nfts, ..._pages[0]]);
-      }
-      isMoreEthPages ? setEthPage(ethPage + 1) : setL2Page(l2Page + 1);
-    } else if (pages[newPage]) {
-      setNfts([...nfts, ...pages[newPage]]);
+  useAsyncEffect(async () => {
+    if (domainOwner) {
+      await handleNextPage();
+      setLoading(false);
     }
-    setCurrentPage(newPage);
+  }, [domainOwner]);
+
+  const loadEthNfts = async () => {
+    if (isAllEthNftsLoaded) {
+      return;
+    }
+
+    const { nfts: _nfts, received } = await getNfts(
+      `https://unstoppabledomains.com/api/nfts/eth?offset=${
+        ethPage * PageLimit
+      }&limit=${PageLimit}&ownerAddress=${domainOwner}`
+    );
+    if (received < PageLimit) {
+      setIsAllEthNftsLoaded(true);
+    }
+    setNfts([...nfts, ..._nfts]);
+    setEthPage(ethPage + 1);
+  };
+
+  const loadL2Nfts = async () => {
+    if (isAllL2NftsLoaded) {
+      return;
+    }
+    const { nfts: _nfts, received } = await getNfts(
+      `https://unstoppabledomains.com/api/nfts/l2?offset=${
+        l2Page * PageLimit
+      }&limit=${PageLimit}&ownerAddress=${domainOwner}&chain=polygon`
+    );
+    if (received < PageLimit) {
+      setIsAllL2NftsLoaded(true);
+    }
+    setNfts([...nfts, ..._nfts]);
+    setL2Page(l2Page + 1);
+  };
+
+  const handleNextPage = async () => {
+    await Promise.all([loadEthNfts(), loadL2Nfts()]);
   };
 
   return (
@@ -102,8 +86,8 @@ function App() {
           </div>
         ) : (
           <InfiniteScroll
-            hasMore={currentPage < pages.length || isMorePages}
-            next={handleNextPageClick}
+            hasMore={!isAllEthNftsLoaded || !isAllL2NftsLoaded}
+            next={handleNextPage}
             dataLength={nfts.length}
             loader={
               <div className={"loader-container"}>
