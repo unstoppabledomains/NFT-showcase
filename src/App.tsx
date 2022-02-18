@@ -31,6 +31,7 @@ function App() {
     const _domainOwner = await getOwner((window as any).domain);
     setDomainOwner(_domainOwner);
   }, []);
+
   useAsyncEffect(async () => {
     if (domainOwner) {
       await handleNextPage();
@@ -40,7 +41,7 @@ function App() {
 
   const loadEthNfts = async () => {
     if (isAllEthNftsLoaded) {
-      return;
+      return [];
     }
 
     const { nfts: _nfts, received } = await getNfts(
@@ -51,13 +52,13 @@ function App() {
     if (received < PageLimit) {
       setIsAllEthNftsLoaded(true);
     }
-    setNfts([...nfts, ..._nfts]);
     setEthPage(ethPage + 1);
+    return _nfts;
   };
 
   const loadL2Nfts = async () => {
     if (isAllL2NftsLoaded) {
-      return;
+      return [];
     }
     const { nfts: _nfts, received } = await getNfts(
       `https://unstoppabledomains.com/api/nfts/l2?offset=${
@@ -67,12 +68,13 @@ function App() {
     if (received < PageLimit) {
       setIsAllL2NftsLoaded(true);
     }
-    setNfts([...nfts, ..._nfts]);
     setL2Page(l2Page + 1);
+    return _nfts;
   };
 
   const handleNextPage = async () => {
-    await Promise.all([loadEthNfts(), loadL2Nfts()]);
+    const [ethNfts, l2Nfts] = await Promise.all([loadEthNfts(), loadL2Nfts()]);
+    setNfts([...nfts, ...ethNfts, ...l2Nfts]);
   };
 
   return (
