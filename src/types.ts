@@ -16,4 +16,10 @@ export interface UdNft {
   ownerOf: string;
   tokenAddress: string;
   tokenId: string;
+  symbol: string | null;
+}
+
+export enum NftCategory {
+  Art = 'art',
+  Other = 'other',
 }
