@@ -57,8 +57,8 @@ export const getNfts = async (
   url: string
 ): Promise<{ nfts: Array<Nft>; received: number, cursor?: string }> => {
   const resp = await fetch(url);
-  const { nfts }: { nfts: UdNft[] } = await resp.json();
+  const { nfts, cursor }: { nfts: UdNft[], cursor?: string } = await resp.json();
   const cleaned = cleanNfts(nfts);
 
-  return { nfts: cleaned, received: nfts.length };
+  return { nfts: cleaned, received: nfts.length, cursor};
 };
