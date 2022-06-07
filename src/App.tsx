@@ -10,8 +10,8 @@ const PageLimit = 50;
 
 function App() {
   const [ethPage, setEthPage] = useState(0);
-  const [l2Page, setL2Page] = useState(0);
-  const [domainOwner, setDomainOwner] = useState("");
+  const [l2Cursor, setL2Cursor] = useState<string | undefined>('');
+  const [domainOwner, setDomainOwner] = useState('');
   const [nfts, setNfts] = useState([] as Nft[]);
   const [loading, setLoading] = useState(true);
   const [isAllEthNftsLoaded, setIsAllEthNftsLoaded] = useState(false); // No need to trigger a request when true
@@ -60,15 +60,13 @@ function App() {
     if (isAllL2NftsLoaded) {
       return [];
     }
-    const { nfts: _nfts, received } = await getNfts(
-      `https://unstoppabledomains.com/api/nfts/l2?offset=${
-        l2Page * PageLimit
-      }&limit=${PageLimit}&ownerAddress=${domainOwner}&chain=polygon`
+    const { nfts: _nfts, received, cursor } = await getNfts(
+      `https://unstoppabledomains.com/api/nfts/l2?limit=${PageLimit}&ownerAddress=${domainOwner}&chain=polygon&cursor=${l2Cursor}`
     );
     if (received < PageLimit) {
       setIsAllL2NftsLoaded(true);
     }
-    setL2Page(l2Page + 1);
+    setL2Cursor(cursor);
     return _nfts;
   };
 
